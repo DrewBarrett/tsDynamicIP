@@ -1,3 +1,4 @@
+import os
 import urllib2
 from flask import Flask, redirect, render_template, request
 from flask_sqlalchemy import SQLAlchemy
