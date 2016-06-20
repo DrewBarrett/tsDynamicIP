@@ -38,7 +38,7 @@ def hello():
     else:
         yourServerStatus = 'online'
     whitelist = User.query.all()
-    if any(yourIP in s for s in whitelist):
+    if any(yourIP in s.ip for s in whitelist):
         whitelisted = True
         yourServerStatus += ' and is on the whitelist'
     else:
