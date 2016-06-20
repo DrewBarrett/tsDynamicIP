@@ -1,0 +1,21 @@
+﻿<!doctype html>
+<html>
+<head>
+    {% block head %}
+    <!--  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" >-->
+    <title>{% block title %}{% endblock %} - Discordant Teamspeak</title>
+    {% endblock %}
+</head>
+<body>
+    <div id="content">
+        The current server is {{ currentServerStatus }}<br />
+        Your server at {{ yourIP }} is {{ yourServerStatus }}<br />
+        {% block content %}{% endblock %}
+    </div>
+    <div id="footer">
+        {% block footer %}
+        made possible by <a href="http://niceme.me">dank memers like you</a>.
+        {% endblock %}
+    </div>
+</body>
+</html>

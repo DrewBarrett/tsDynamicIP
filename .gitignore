@@ -137,3 +137,11 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
+/tsDynamicIP.pyproj
+/web.config
+/web.debug.config
+/tsDynamicIP.sln
+/ptvs_virtualenv_proxy.py
+/obj/Debug
+/bin
+/.vs
