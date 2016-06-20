@@ -43,7 +43,7 @@ def hello():
         yourServerStatus += ' and is on the whitelist'
     else:
         whitelisted = False
-        yourServerStatus += ' and is not on the whitelist'
+        yourServerStatus += ' and is not on the whitelist: ' + whitelist
 
     return render_template('template.html', currentServerStatus=remoteServerStatus,yourServerStatus=yourServerStatus,yourIP=yourIP)
 
