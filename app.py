@@ -31,11 +31,10 @@ def hello():
         remoteServerStatus = 'online'
     else:
         remoteServerStatus = 'offline'
-    txt = urllib2.urlopen("http://view.light-speed.com/teamspeak3.php?IP=" + yourIP + "&PORT=9987&QUERY=10011&UID=763660&display=none&font=12px").read()
-    if 'Error' in txt:
-        yourServerStatus = 'offline'
-    else:
+    if ipServerUp(yourIP):
         yourServerStatus = 'online'
+    else:
+        yourServerStatus = 'offline'
     whitelist = User.query.all()
     if any(yourIP in s.ip for s in whitelist):
         whitelisted = True
@@ -44,7 +43,7 @@ def hello():
         whitelisted = False
         yourServerStatus += ' and is not on the whitelist: '
     for s in whitelist:
-        yourServerStatus += ' ' + s.ip + ','
+        yourServerStatus += ' ' + s.ip +  '(' + ipServerUp(s.ip) + '),'
 
     if 'offline' in remoteServerStatus:
         return render_template('updateIP.html', currentServerStatus=remoteServerStatus,yourServerStatus=yourServerStatus,yourIP=yourIP)
@@ -55,12 +54,19 @@ def remoteServerUp():
         return False
     else:
         return True
+def ipServerUp(ip):
+    txt = urllib2.urlopen("http://view.light-speed.com/teamspeak3.php?IP=" + ip + "&PORT=9987&QUERY=10011&UID=763660&display=none&font=12px").read()
+    if 'Error' in txt:
+        return False
+    else:
+        return True
 
 @app.route("/setIP", methods=['POST'])
 def setIP():
     if remoteServerUp():
         return 'The ip already points to an online server'
-
+    if ipServerUp(request.form['ip']) == False:
+        return 'The requested ip does not have an accessable ts server'
     return 'failed to set ip'
 #if __name__ == "__main__":
 #    app.run()
