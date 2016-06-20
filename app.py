@@ -67,7 +67,8 @@ def ipServerUp(ip):
 @app.route("/setIP", methods=['POST'])
 def setIP():
     if remoteServerUp():
-        return 'The ip already points to an online server'
+        if request.form['password'] != os.environ['PASSWORD']:
+            return 'The ip already points to an online server'
     if ipServerUp(request.form['ip']) == False:
         return 'The requested ip does not have an accessable ts server'
     return 'failed to set ip'
