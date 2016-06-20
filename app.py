@@ -43,7 +43,10 @@ def hello():
         whitelisted = False
         yourServerStatus += ' and is not on the whitelist: '
     for s in whitelist:
-        yourServerStatus += ' ' + s.ip +  '(' + ipServerUp(s.ip) + '),'
+        online = 'offline'
+        if ipServerUp(s.ip):
+            online = 'online'
+        yourServerStatus += ' ' + s.ip +  '(' + online + '),'
 
     if 'offline' in remoteServerStatus:
         return render_template('updateIP.html', currentServerStatus=remoteServerStatus,yourServerStatus=yourServerStatus,yourIP=yourIP)
