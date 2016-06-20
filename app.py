@@ -1,9 +1,11 @@
 import os
 import urllib2
+import requests
 from flask import Flask, redirect, render_template, request
 from flask_sqlalchemy import SQLAlchemy
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
 class User(db.Model):
@@ -68,9 +70,12 @@ def ipServerUp(ip):
 def setIP():
     if remoteServerUp():
         if request.form['password'] != os.environ['PASSWORD']:
-            return 'The ip already points to an online server'
+            return 'The ip already points to an online server and no overide password supplied'
     if ipServerUp(request.form['ip']) == False:
-        return 'The requested ip does not have an accessable ts server'
-    return 'failed to set ip'
+        return 'The target server is offline'
+    #at this point we know the target server is online and we have permission to change the current servers ip away
+    payload = {'hostname': 'ts1.discordantgamers.com', 'myip': request.form['ip']}
+    r = request.post('https://' + os.environ['DNSAPI_USERNAME'] + ':' + os.environ['DNSAPI_PASSWORD'] + '@domains.google.com/nic/update', params=payload)
+    return r.text + ' ' + r.url
 #if __name__ == "__main__":
 #    app.run()
