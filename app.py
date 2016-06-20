@@ -27,11 +27,10 @@ def hello():
         yourIP = request.headers.getlist("X-Forwarded-For")[0]
     else:
         yourIP = request.remote_addr
-    txt = urllib2.urlopen("http://view.light-speed.com/teamspeak3.php?IP=ts.discordantgamers.com&PORT=9987&QUERY=10011&UID=763660&display=none&font=12px").read()
-    if 'Error' in txt:
-        remoteServerStatus = 'offline'
-    else:
+    if remoteServerUp():
         remoteServerStatus = 'online'
+    else:
+        remoteServerStatus = 'offline'
     txt = urllib2.urlopen("http://view.light-speed.com/teamspeak3.php?IP=" + yourIP + "&PORT=9987&QUERY=10011&UID=763660&display=none&font=12px").read()
     if 'Error' in txt:
         yourServerStatus = 'offline'
@@ -50,9 +49,18 @@ def hello():
     if 'offline' in remoteServerStatus:
         return render_template('updateIP.html', currentServerStatus=remoteServerStatus,yourServerStatus=yourServerStatus,yourIP=yourIP)
     return render_template('updateIP.html', currentServerStatus=remoteServerStatus,yourServerStatus=yourServerStatus,yourIP=yourIP)
+def remoteServerUp():
+    txt = urllib2.urlopen("http://view.light-speed.com/teamspeak3.php?IP=ts.discordantgamers.com&PORT=9987&QUERY=10011&UID=763660&display=none&font=12px").read()
+    if 'Error' in txt:
+        return False
+    else:
+        return True
 
-@app.route("/setIP")
+@app.route("/setIP", methods=['POST'])
 def setIP():
+    if remoteServerUp() == False:
+        return 'The ip already points to an online server'
+
     return 'failed to set ip'
 #if __name__ == "__main__":
 #    app.run()
