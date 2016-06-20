@@ -40,10 +40,12 @@ def hello():
     whitelist = User.query.all()
     if any(yourIP in s.ip for s in whitelist):
         whitelisted = True
-        yourServerStatus += ' and is on the whitelist'
+        yourServerStatus += ' and is on the whitelist: '
     else:
         whitelisted = False
-        yourServerStatus += ' and is not on the whitelist'
+        yourServerStatus += ' and is not on the whitelist: '
+    for s in whitelist:
+        yourServerStatus += ' ' + s.ip + ','
 
     if 'offline' in remoteServerStatus:
         return render_template('updateIP.html', currentServerStatus=remoteServerStatus,yourServerStatus=yourServerStatus,yourIP=yourIP)
