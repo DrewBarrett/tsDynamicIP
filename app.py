@@ -21,6 +21,7 @@ class User(db.Model):
 def hello():
     remoteServerStatus = None
     yourServerStatus = None
+    whitelisted = False
     #yourIP = request.environ['REMOTE_ADDR']
     if request.headers.getlist("X-Forwarded-For"):
         yourIP = request.headers.getlist("X-Forwarded-For")[0]
@@ -36,6 +37,13 @@ def hello():
         yourServerStatus = 'offline'
     else:
         yourServerStatus = 'online'
+    whitelist = User.query.all()
+    if yourIP in whitelist:
+        whitelisted = True
+        yourServerStatus += ' and is on the whitelist'
+    else:
+        whitelisted = False
+        yourServerStatus += ' and is not on the whitelist'
 
     return render_template('template.html', currentServerStatus=remoteServerStatus,yourServerStatus=yourServerStatus,yourIP=yourIP)
 
