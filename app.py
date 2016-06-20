@@ -46,8 +46,8 @@ def hello():
         yourServerStatus += ' and is not on the whitelist: '
     for s in whitelist:
         online = 'offline'
-        if ipServerUp(s.ip):
-            online = 'online'
+    #    if ipServerUp(s.ip):
+    #        online = 'online'
         yourServerStatus += ' ' + s.ip +  '(' + online + '),'
 
     if 'offline' in remoteServerStatus:
