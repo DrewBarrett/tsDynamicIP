@@ -38,12 +38,12 @@ def hello():
     else:
         yourServerStatus = 'online'
     whitelist = User.query.all()
-    if yourIP in whitelist:
+    if any(yourIP in s for s in whitelist):
         whitelisted = True
         yourServerStatus += ' and is on the whitelist'
     else:
         whitelisted = False
-        yourServerStatus += ' and is not on the whitelist: ' + whitelist
+        yourServerStatus += ' and is not on the whitelist'
 
     return render_template('template.html', currentServerStatus=remoteServerStatus,yourServerStatus=yourServerStatus,yourIP=yourIP)
 
