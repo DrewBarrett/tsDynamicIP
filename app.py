@@ -45,7 +45,12 @@ def hello():
         whitelisted = False
         yourServerStatus += ' and is not on the whitelist'
 
-    return render_template('template.html', currentServerStatus=remoteServerStatus,yourServerStatus=yourServerStatus,yourIP=yourIP)
+    if 'offline' in remoteServerStatus:
+        return render_template('updateIP.html', currentServerStatus=remoteServerStatus,yourServerStatus=yourServerStatus,yourIP=yourIP)
+    return render_template('updateIP.html', currentServerStatus=remoteServerStatus,yourServerStatus=yourServerStatus,yourIP=yourIP)
 
+@app.route("/setIP")
+def setIP():
+    return 'failed to set ip'
 #if __name__ == "__main__":
 #    app.run()

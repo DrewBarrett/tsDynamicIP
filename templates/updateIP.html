@@ -4,6 +4,8 @@
 {{ super() }}
 {% endblock %}
 {% block content %}
-<h1>Index</h1>
-    Welcome on my awesome homepage.
+<form action="https://tsdiscordant.herokuapp.com/setIP" method="post">
+    <input type="text" name="ip" value="{{ yourIP }}"><br>
+    <input type="submit" value="Set server ip to mine">
+</form>
 {% endblock %}
