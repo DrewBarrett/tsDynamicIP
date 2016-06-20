@@ -58,7 +58,7 @@ def remoteServerUp():
 
 @app.route("/setIP", methods=['POST'])
 def setIP():
-    if remoteServerUp() == False:
+    if not remoteServerUp():
         return 'The ip already points to an online server'
 
     return 'failed to set ip'
