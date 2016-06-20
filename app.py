@@ -21,7 +21,11 @@ class User(db.Model):
 def hello():
     remoteServerStatus = None
     yourServerStatus = None
-    yourIP = request.environ['REMOTE_ADDR']
+    #yourIP = request.environ['REMOTE_ADDR']
+    if request.headers.getlist("X-Forwarded-For"):
+        yourIP = request.headers.getlist("X-Forwarded-For")[0]
+    else:
+        yourIP = request.remote_addr
     txt = urllib2.urlopen("http://view.light-speed.com/teamspeak3.php?IP=ts.discordantgamers.com&PORT=9987&QUERY=10011&UID=763660&display=none&font=12px").read()
     if 'Error' in txt:
         remoteServerStatus = 'offline'
