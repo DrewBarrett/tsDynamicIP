@@ -7,6 +7,7 @@ app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
+whitelist = User.query.all()
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -37,8 +38,9 @@ def hello():
         yourServerStatus = 'online'
     else:
         yourServerStatus = 'offline'
-    whitelist = User.query.all()
-    if any(yourIP in s.ip for s in whitelist):
+    
+    
+    if checkIpWhitelist(yourIP):
         whitelisted = True
         yourServerStatus += ' and is on the whitelist: '
     else:
@@ -62,6 +64,11 @@ def remoteServerUp():
         return False
     else:
         return True
+def checkIpWhitelist(ip):
+    if any(yourIP in s.ip for s in whitelist):
+        return True
+    else:
+        return False
 def ipServerUp(ip):
     try:
         txt = urllib2.urlopen("http://view.light-speed.com/teamspeak3.php?IP=" + ip + "&PORT=9987&QUERY=10011&UID=763660&display=none&font=12px", timeout=1).read()
@@ -74,12 +81,25 @@ def ipServerUp(ip):
 
 @app.route("/setIP", methods=['POST'])
 def setIP():
+    auth = False
+    if request.form['password'] == os.environ['PASSWORD']:
+        auth = True
     if remoteServerUp():
-        if request.form['password'] != os.environ['PASSWORD']:
+        if auth == False:
             return 'The ip already points to an online server and no overide password supplied'
     if ipServerUp(request.form['ip']) == False:
         return 'The target server is offline'
     #at this point we know the target server is online and we have permission to change the current servers ip away
+    if checkIpWhitelist(request.form['ip']) == False:
+        #ip not on the whitelist
+        if auth:
+            #we are authorized so we add the ip to the whitelist
+            newuser = User(request.form['ip'])
+            db.session.add(newuser)
+            db.session.commit()
+        else:
+            #we are not authorized or whitelisted so we error boys
+            return 'Not whitelisted or authorized to whitelist (ask admin for password)'
     payload = {'hostname': 'ts1.discordantgamers.com', 'myip': request.form['ip']}
     r = requests.post('https://' + os.environ['DNSAPI_USERNAME'] + ':' + os.environ['DNSAPI_PASSWORD'] + '@domains.google.com/nic/update', params=payload)
     return r.text
