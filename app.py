@@ -60,14 +60,11 @@ def remoteServerUp():
     else:
         return True
 def ipServerUp(ip):
-    try:
-        txt = urllib2.urlopen("http://view.light-speed.com/teamspeak3.php?IP=" + ip + "&PORT=9987&QUERY=10011&UID=763660&display=none&font=12px", timeout=1).read()
-        if 'Error' in txt:
-            return False
-        else:
-            return True
-    except urllib2.URLError: 
+    txt = urllib2.urlopen("http://view.light-speed.com/teamspeak3.php?IP=" + ip + "&PORT=9987&QUERY=10011&UID=763660&display=none&font=12px", timeout=1).read()
+    if 'Error' in txt:
         return False
+    else:
+        return True
 
 @app.route("/setIP", methods=['POST'])
 def setIP():
