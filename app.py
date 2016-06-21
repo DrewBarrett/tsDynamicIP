@@ -66,9 +66,8 @@ def ipServerUp(ip):
             return False
         else:
             return True
-    except urllib2.URLError as err: pass
-    return False
-    
+    except urllib2.URLError as err: 
+        return False
 
 @app.route("/setIP", methods=['POST'])
 def setIP():
