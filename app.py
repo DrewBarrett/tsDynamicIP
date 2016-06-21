@@ -101,7 +101,7 @@ def setIP():
         else:
             #we are not authorized or whitelisted so we error boys
             return 'Not whitelisted or authorized to whitelist (ask admin for password)'
-    payload = {'hostname': 'ts1.discordantgamers.com', 'myip': request.form['ip']}
+    payload = {'hostname': 'ts.discordantgamers.com', 'myip': request.form['ip']}
     r = requests.post('https://' + os.environ['DNSAPI_USERNAME'] + ':' + os.environ['DNSAPI_PASSWORD'] + '@domains.google.com/nic/update', params=payload)
     return r.text
 #if __name__ == "__main__":
