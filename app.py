@@ -66,7 +66,7 @@ def remoteServerUp():
         return True
 def checkIpWhitelist(ip):
     whitelist = User.query.all()
-    if any(yourIP in s.ip for s in whitelist):
+    if any(ip in s.ip for s in whitelist):
         return True
     else:
         return False
