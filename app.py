@@ -46,8 +46,8 @@ def hello():
         yourServerStatus += ' and is not on the whitelist: '
     for s in whitelist:
         online = 'offline'
-    #    if ipServerUp(s.ip):
-    #        online = 'online'
+        if ipServerUp(s.ip):
+            online = 'online'
         yourServerStatus += ' ' + s.ip +  '(' + online + '),'
 
     if 'offline' in remoteServerStatus:
@@ -60,11 +60,15 @@ def remoteServerUp():
     else:
         return True
 def ipServerUp(ip):
-    txt = urllib2.urlopen("http://view.light-speed.com/teamspeak3.php?IP=" + ip + "&PORT=9987&QUERY=10011&UID=763660&display=none&font=12px").read()
-    if 'Error' in txt:
-        return False
-    else:
-        return True
+    try:
+        txt = urllib2.urlopen("http://view.light-speed.com/teamspeak3.php?IP=" + ip + "&PORT=9987&QUERY=10011&UID=763660&display=none&font=12px", timeout=1).read()
+        if 'Error' in txt:
+            return False
+        else:
+            return True
+    except urllib2.URLError as err: pass
+    return False
+    
 
 @app.route("/setIP", methods=['POST'])
 def setIP():
@@ -76,6 +80,6 @@ def setIP():
     #at this point we know the target server is online and we have permission to change the current servers ip away
     payload = {'hostname': 'ts1.discordantgamers.com', 'myip': request.form['ip']}
     r = requests.post('https://' + os.environ['DNSAPI_USERNAME'] + ':' + os.environ['DNSAPI_PASSWORD'] + '@domains.google.com/nic/update', params=payload)
-    return r.text + ' ' + r.url
+    return r.text
 #if __name__ == "__main__":
 #    app.run()
