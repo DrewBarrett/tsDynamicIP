@@ -61,7 +61,7 @@ def remoteServerUp():
         return True
 def ipServerUp(ip):
     result = urllib2.urlopen("http://view.light-speed.com/teamspeak3.php?IP=" + ip + "&PORT=9987&QUERY=10011&UID=763660&display=none&font=12px")
-    if txt == None:
+    if result == None:
         return False
     txt = result.read()
     if 'Error' in txt:
