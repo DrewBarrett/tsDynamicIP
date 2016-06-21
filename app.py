@@ -75,7 +75,7 @@ def setIP():
         return 'The target server is offline'
     #at this point we know the target server is online and we have permission to change the current servers ip away
     payload = {'hostname': 'ts1.discordantgamers.com', 'myip': request.form['ip']}
-    r = request.post('https://' + os.environ['DNSAPI_USERNAME'] + ':' + os.environ['DNSAPI_PASSWORD'] + '@domains.google.com/nic/update', params=payload)
+    r = requests.post('https://' + os.environ['DNSAPI_USERNAME'] + ':' + os.environ['DNSAPI_PASSWORD'] + '@domains.google.com/nic/update', params=payload)
     return r.text + ' ' + r.url
 #if __name__ == "__main__":
 #    app.run()
