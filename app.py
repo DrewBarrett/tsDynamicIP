@@ -7,7 +7,6 @@ app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
-whitelist = User.query.all()
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -25,6 +24,7 @@ def hello():
     remoteServerStatus = None
     yourServerStatus = None
     whitelisted = False
+    whitelist = User.query.all()
     #yourIP = request.environ['REMOTE_ADDR']
     if request.headers.getlist("X-Forwarded-For"):
         yourIP = request.headers.getlist("X-Forwarded-For")[0]
@@ -65,6 +65,7 @@ def remoteServerUp():
     else:
         return True
 def checkIpWhitelist(ip):
+    whitelist = User.query.all()
     if any(yourIP in s.ip for s in whitelist):
         return True
     else:
