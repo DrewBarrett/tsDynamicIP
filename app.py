@@ -82,7 +82,10 @@ def ipServerUp(ip):
 @app.route("/whitelist")
 def whitelist():
     white = User.query.all()
-    return white
+    whitestring = ''
+    for s in white:
+        whitestring += s.ip + '\n'
+    return whitestring
 
 @app.route("/setIP", methods=['POST'])
 def setIP():
