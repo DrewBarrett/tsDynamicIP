@@ -84,7 +84,7 @@ def whitelist():
     white = User.query.all()
     whitestring = ''
     for s in white:
-        whitestring += s.ip + '\n'
+        whitestring += s.ip + '%'
     return whitestring
 
 @app.route("/setIP", methods=['POST'])
