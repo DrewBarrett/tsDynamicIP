@@ -79,6 +79,10 @@ def ipServerUp(ip):
         return False
     else:
         return True
+@app.route("/whitelist")
+def whitelist():
+    white = User.query.all()
+    return white
 
 @app.route("/setIP", methods=['POST'])
 def setIP():
