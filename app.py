@@ -85,6 +85,11 @@ def whitelist():
     whitestring = ''
     for s in white:
         whitestring += s.ip + '%'
+    if request.headers.getlist("X-Forwarded-For"):
+        yourIP = request.headers.getlist("X-Forwarded-For")[0]
+    else:
+        yourIP = request.remote_addr
+    whitestring += yourIP + '$'
     return whitestring
 
 @app.route("/setIP", methods=['POST'])
