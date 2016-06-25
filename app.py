@@ -95,25 +95,38 @@ def whitelist():
 @app.route("/setIP", methods=['POST'])
 def setIP():
     auth = False
-    if request.form['password'] == os.environ['PASSWORD']:
+    password = ''
+    ip = ''
+
+    try:
+        ip = request.form['ip']
+        password = request.form['password']
+    except :
+        try:
+            ip = request.args.get('ip', '')
+            password = request.args.get('password', '')
+        except :
+            return ' failed to find form info or args info '
+
+    if password == os.environ['PASSWORD']:
         auth = True
     if remoteServerUp():
         if auth == False:
             return 'The ip already points to an online server and no overide password supplied'
-    if ipServerUp(request.form['ip']) == False:
+    if ipServerUp(ip) == False:
         return 'The target server is offline'
     #at this point we know the target server is online and we have permission to change the current servers ip away
-    if checkIpWhitelist(request.form['ip']) == False:
+    if checkIpWhitelist(ip) == False:
         #ip not on the whitelist
         if auth:
             #we are authorized so we add the ip to the whitelist
-            newuser = User(request.form['ip'])
+            newuser = User(ip)
             db.session.add(newuser)
             db.session.commit()
         else:
             #we are not authorized or whitelisted so we error boys
             return 'Not whitelisted or authorized to whitelist (ask admin for password)'
-    payload = {'hostname': 'ts.discordantgamers.com', 'myip': request.form['ip']}
+    payload = {'hostname': 'ts.discordantgamers.com', 'myip': ip}
     r = requests.post('https://' + os.environ['DNSAPI_USERNAME'] + ':' + os.environ['DNSAPI_PASSWORD'] + '@domains.google.com/nic/update', params=payload)
     return r.text
 #if __name__ == "__main__":
